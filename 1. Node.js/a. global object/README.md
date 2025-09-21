@@ -144,9 +144,64 @@ console.log(people); // ❌ Error! people is not defined
 
 ---
 
-## 5. Sharing Data Between Files: Export and Import
+## 5. Understanding Exports: Making Your Code Available to Other Files
 
-### Step 1: Exporting from a File (people.js)
+### Why Do We Need Exports?
+
+In Node.js, **files don't know about each other by default**. This is the modular system in action - each file is isolated. To share data between files, you must explicitly export it.
+
+```javascript
+// Without exports, this stays private to the file
+const secret = "This cannot be accessed from other files";
+```
+
+### The `module` Object: Your Export Gateway
+
+Every Node.js file automatically gets a special `module` object. Let's see what's inside:
+
+```javascript
+// Uncomment this in any file to see the module object
+console.log(module);
+
+/* Output will show something like:
+Module {
+  id: '.',
+  path: '/your/file/path',
+  exports: {},  // ← This is what we use!
+  parent: null,
+  filename: '/your/file/path/people.js',
+  loaded: false,
+  children: [],
+  paths: []
+}
+*/
+```
+
+**Key Point:** The `exports` property starts as an **empty object** `{}` - this is where you put things you want to share!
+
+### Method 1: Exporting a Single Item
+
+When you want to export just one thing:
+
+```javascript
+// people.js
+const people = ["Shakib", "Tamim", "Mashrafi"];
+
+// Export only the array
+module.exports = people;
+```
+
+**Using the single export:**
+
+```javascript
+// index.js
+const people = require("./people");
+console.log(people); // ["Shakib", "Tamim", "Mashrafi"]
+```
+
+### Method 2: Exporting Multiple Items
+
+When you want to export several things, use an object:
 
 ```javascript
 // people.js
@@ -157,10 +212,7 @@ function testFunction() {
   console.log("I am a function");
 }
 
-// Method 1: Export a single thing
-module.exports = people;
-
-// Method 2: Export multiple things (this overwrites method 1)
+// Export multiple items as an object
 module.exports = {
   people, // same as people: people
   a, // same as a: a
@@ -168,13 +220,106 @@ module.exports = {
 };
 ```
 
-**What is `module.exports`?**
+**Using the object export:**
 
-- `module` is a special object that Node.js provides to every file
-- `exports` is a property that starts as an empty object `{}`
-- You assign what you want to share to `module.exports`
+```javascript
+// index.js
+const exports = require("./people");
 
-### Step 2: Importing into Another File (index.js)
+console.log(exports.people); // ["Shakib", "Tamim", "Mashrafi"]
+console.log(exports.a); // 10
+exports.testFunction(); // "I am a function"
+```
+
+### Method 3: Destructuring Imports
+
+You can extract specific items using destructuring:
+
+```javascript
+// Instead of importing the whole object
+const exports = require("./people");
+const people = exports.people;
+const a = exports.a;
+
+// Use destructuring (cleaner!)
+const { people, a, testFunction } = require("./people");
+
+console.log(people); // ["Shakib", "Tamim", "Mashrafi"]
+console.log(a); // 10
+testFunction(); // "I am a function"
+```
+
+### ⚠️ Important: Export Order Matters
+
+**Watch out for this common mistake:**
+
+```javascript
+// people.js
+const people = ["Shakib", "Tamim", "Mashrafi"];
+const a = 10;
+
+// First export (will be overwritten!)
+module.exports = people;
+
+// Second export (this overwrites the first one!)
+module.exports = {
+  people,
+  a,
+};
+
+// Result: Only the object is exported, not the array
+```
+
+**The rule:** The **last** `module.exports` assignment wins!
+
+### Step-by-Step Export Process
+
+1. **Start:** `module.exports = {}` (empty object)
+2. **Assign:** `module.exports = yourData`
+3. **Import:** Another file uses `require()` to get `yourData`
+4. **Use:** The imported data is available in the receiving file
+
+### Common Export Patterns
+
+```javascript
+// Pattern 1: Single function
+module.exports = function (name) {
+  return `Hello, ${name}!`;
+};
+
+// Pattern 2: Object with methods
+module.exports = {
+  greet: function (name) {
+    return `Hello, ${name}!`;
+  },
+  farewell: function (name) {
+    return `Goodbye, ${name}!`;
+  },
+};
+
+// Pattern 3: Class
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+}
+module.exports = Person;
+
+// Pattern 4: Mixed exports
+module.exports = {
+  data: [1, 2, 3],
+  config: { debug: true },
+  helper: function () {
+    return "help";
+  },
+};
+```
+
+## 6. Importing: Getting Data from Other Files
+
+### Understanding `require()`: The Import Function
+
+`require()` is Node.js's built-in function for importing modules:
 
 ```javascript
 // index.js
@@ -189,15 +334,33 @@ console.log(people.a); // 10
 people.testFunction(); // "I am a function"
 ```
 
-**Understanding `require()`:**
+**How `require()` works:**
 
 - `require()` is a Node.js function to import modules
 - `"./people"` means look for `people.js` in the same directory
 - Returns whatever was assigned to `module.exports`
+- The file extension `.js` is optional
+
+### Path Types in require()
+
+```javascript
+// Relative paths (your files)
+const myModule = require("./people"); // same directory
+const utils = require("../utils/helpers"); // parent directory
+const config = require("./config/settings"); // subdirectory
+
+// Built-in modules (no path needed)
+const fs = require("fs");
+const path = require("path");
+
+// External packages (installed via npm)
+const express = require("express");
+const lodash = require("lodash");
+```
 
 ---
 
-## 6. Complete Working Example
+## 7. Complete Working Example
 
 ### File Structure
 
