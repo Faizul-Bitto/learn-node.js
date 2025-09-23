@@ -2,14 +2,6 @@
 
 This directory demonstrates creating a basic HTTP server that doesn't respond to requests, showing what happens when no request handler is defined.
 
-## 📁 File Structure
-
-```
-server creating and returning nothing in reponse/
-├── create a server - return nothing.js    # Basic server without response handling
-└── README.md                              # This documentation
-```
-
 ## 🎯 What You'll Learn
 
 - **Basic HTTP server creation** using the `http` module
