@@ -2,14 +2,6 @@
 
 This directory demonstrates creating an HTTP server with event listeners, specifically showing how to listen for connection events using the EventEmitter pattern.
 
-## 📁 File Structure
-
-```
-server creating and use 'on' event listen property/
-├── create a server - use 'on' event listener property.js    # Server with connection event listener
-└── README.md                                               # This documentation
-```
-
 ## 🎯 What You'll Learn
 
 - **Event-driven server architecture** using EventEmitter
