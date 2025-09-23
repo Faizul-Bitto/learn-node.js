@@ -2,14 +2,6 @@
 
 This directory demonstrates creating a fully functional HTTP server that properly handles requests and sends responses using the request (`req`) and response (`res`) objects.
 
-## 📁 File Structure
-
-```
-server creating with proper req, res objects in callback/
-├── create a server with proper callback function (req, res obejcts).js    # Complete server with request/response handling
-└── README.md                                                             # This documentation
-```
-
 ## 🎯 What You'll Learn
 
 - **Complete HTTP server implementation** with request/response handling
