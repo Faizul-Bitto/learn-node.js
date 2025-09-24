@@ -415,7 +415,7 @@ After understanding this example, you should:
 
 ```bash
 # Navigate to directory
-cd "server creating and returning nothing in reponse"
+cd "server creating and returning nothing in response"
 
 # Run the server
 node "create a server - return nothing.js"
