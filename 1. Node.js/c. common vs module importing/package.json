@@ -1,0 +1,12 @@
+{
+  "name": "learn-node.js",
+  "version": "1.0.0",
+  "description": "Learning Node.js",
+  "license": "MIT",
+  "author": "Faizul Bitto",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
